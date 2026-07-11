@@ -28,7 +28,7 @@ async function doLogin() {
     const btn        = document.getElementById('login-btn');
 
     if (!customerId) {
-        showLoginError('Please enter your Customer ID.');
+        showLoginError('Please enter your Member ID.');
         return;
     }
 
@@ -49,7 +49,7 @@ async function doLogin() {
         const data = await res.json();
 
         if (!res.ok || !data.success) {
-            showLoginError(data.error || 'Login failed. Please check your Customer ID.');
+            showLoginError(data.error || 'Login failed. Please check your Member ID.');
         } else {
             sessionStorage.setItem('tm_member', JSON.stringify(data.member));
             renderDashboard(data.member);

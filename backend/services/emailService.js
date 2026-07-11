@@ -103,7 +103,7 @@ const sendRoleNotificationEmail = async (
       ` : ''}
     </div>
     <div class="footer">
-      Wakad Toastmasters Club · Area C2, District 125 · This is an automated notification.
+      Wakad Toastmasters Club · Division E, District 226 · This is an automated notification.
     </div>
   </div>
 </body>

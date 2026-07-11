@@ -22,9 +22,131 @@
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
       cursor: help;
     }
+    
+    /* ── Admin Login Overlay ───────────────────────── */
+    .admin-login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 17, 23, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 10000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-login-card {
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      border-radius: 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      text-align: center;
+      animation: fadeInUp 0.4s ease;
+    }
+    [data-theme="dark"] .admin-login-card {
+      background: rgba(30, 41, 59, 0.95);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    .admin-login-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #004165;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+    [data-theme="dark"] .admin-login-header h2 {
+      color: #f1f5f9;
+    }
+    .admin-login-header p {
+      font-size: 0.9rem;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    [data-theme="dark"] .admin-login-header p {
+      color: #94a3b8;
+    }
+    .admin-login-logo {
+      height: 60px;
+      width: auto;
+    }
+    .btn-admin-login {
+      margin-top: 24px;
+      width: 100%;
+      background: linear-gradient(135deg, #004165, #002D4A);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 65, 101, 0.2);
+      transition: all 0.2s ease;
+    }
+    .btn-admin-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 65, 101, 0.35);
+      background: linear-gradient(135deg, #005280, #003659);
+    }
+    #adminPasswordInput {
+      width: 100%;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    [data-theme="dark"] #adminPasswordInput {
+      background: #0f172a;
+      border-color: #334155;
+      color: #f1f5f9;
+    }
+    #adminPasswordInput:focus {
+      outline: none;
+      border-color: #004165;
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(0, 65, 101, 0.15);
+    }
+    [data-theme="dark"] #adminPasswordInput:focus {
+      background: #1e293b;
+      border-color: #3b82f6;
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   </style>
 </head>
 <body>
+
+  <!-- Admin Authentication Login Modal Overlay -->
+  <div id="admin-login-overlay" class="admin-login-overlay" style="display: flex;">
+    <div class="admin-login-card">
+      <div class="admin-login-header">
+        <img src="tm-logo.png" alt="Toastmasters Logo" class="admin-login-logo">
+        <h2>Admin Authentication</h2>
+        <p>Please enter the administrator password to access the dashboard.</p>
+      </div>
+      <div class="form-group" style="margin-top: 20px; text-align: left;">
+        <label for="adminPasswordInput" style="font-weight: 500; font-size: 0.9rem; margin-bottom: 8px; display: block; color: var(--text-primary);">Password</label>
+        <input type="password" id="adminPasswordInput" placeholder="Enter admin password" autocomplete="off" onkeydown="if(event.key==='Enter') doAdminLogin()">
+      </div>
+      <div id="adminLoginError" class="admin-login-error" style="display: none; color: #ef4444; font-size: 0.85rem; margin-top: 10px; font-weight: 500; text-align: center;"></div>
+      <button onclick="doAdminLogin()" class="btn-admin-login">
+        Unlock Dashboard
+      </button>
+    </div>
+  </div>
 
   <!-- ── SIDEBAR ────────────────────────────────────────────── -->
   <aside class="sidebar" id="sidebar">
@@ -95,14 +217,14 @@
       <div class="bar">
         <div class="search-box">
           <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
-          <input id="search-input" type="text" placeholder="Search by name or Customer ID…" oninput="filterMembers()"/>
+          <input id="search-input" type="text" placeholder="Search by name or Member ID…" oninput="filterMembers()"/>
         </div>
         <button class="btn-red" onclick="openAddModal()">+ Add Member</button>
       </div>
 
       <div class="table-card">
         <table>
-          <thead><tr><th>#</th><th>Customer ID</th><th>Member Name</th><th>Joined</th><th>Actions</th></tr></thead>
+          <thead><tr><th>#</th><th>Member ID</th><th>Member Name</th><th>Joined</th><th>Actions</th></tr></thead>
           <tbody id="members-tbody"><tr><td colspan="5" class="empty-row">Loading…</td></tr></tbody>
         </table>
       </div>
@@ -128,7 +250,7 @@
 
       <div class="table-card">
         <table>
-          <thead><tr><th>Member Name</th><th>Customer ID</th><th>Role</th><th>Meeting Date</th><th>Status</th><th>Admin Actions</th></tr></thead>
+          <thead><tr><th>Member Name</th><th>Member ID</th><th>Role</th><th>Meeting Date</th><th>Status</th><th>Admin Actions</th></tr></thead>
           <tbody id="roles-tbody"><tr><td colspan="6" class="empty-row">Click Refresh to load…</td></tr></tbody>
         </table>
       </div>
@@ -145,7 +267,7 @@
       </div>
       <div class="modal-bd">
         <input type="hidden" id="edit-id"/>
-        <div class="field"><label>Customer ID</label><input id="input-cid" placeholder="PN-XXXXXXXX"/></div>
+        <div class="field"><label>Member ID</label><input id="input-cid" placeholder="PN-XXXXXXXX"/></div>
         <div class="field"><label>Member Name</label><input id="input-name" placeholder="Full Name"/></div>
         <p id="modal-err" class="err-box" style="display:none"></p>
       </div>

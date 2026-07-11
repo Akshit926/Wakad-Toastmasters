@@ -11,8 +11,77 @@ let allRoles   = [];
 let editingId  = null;
 let roleTab    = 'all';
 
+// ── Auth Fetch Interceptor ────────────────────────────────────────────────────
+const originalFetch = window.fetch;
+window.fetch = async function(url, options = {}) {
+    const savedPassword = sessionStorage.getItem('adminPassword');
+    if (savedPassword) {
+        options.headers = options.headers || {};
+        options.headers['x-admin-password'] = savedPassword;
+    }
+    const res = await originalFetch(url, options);
+    
+    // If backend returns 401 Unauthorized, automatically trigger logout/re-auth
+    if (res.status === 401 && !url.includes('/api/club-members/auth/login')) {
+        sessionStorage.removeItem('adminPassword');
+        document.getElementById('admin-login-overlay').style.display = 'flex';
+        document.getElementById('adminPasswordInput').value = '';
+        document.getElementById('adminPasswordInput').focus();
+    }
+    return res;
+};
+
+// ── Admin Login Logic ─────────────────────────────────────────────────────────
+async function doAdminLogin() {
+    const passwordInput = document.getElementById('adminPasswordInput');
+    const password = passwordInput.value.trim();
+    const errorDiv = document.getElementById('adminLoginError');
+
+    if (!password) {
+        errorDiv.textContent = 'Please enter the password.';
+        errorDiv.style.display = 'block';
+        return;
+    }
+
+    try {
+        const res = await originalFetch(`${API}`, {
+            method: 'GET',
+            headers: {
+                'x-admin-password': password
+            }
+        });
+
+        if (res.ok) {
+            sessionStorage.setItem('adminPassword', password);
+            document.getElementById('admin-login-overlay').style.display = 'none';
+            errorDiv.style.display = 'none';
+            loadMembers();
+        } else if (res.status === 401) {
+            errorDiv.textContent = 'Invalid password. Access denied.';
+            errorDiv.style.display = 'block';
+            passwordInput.value = '';
+            passwordInput.focus();
+        } else {
+            errorDiv.textContent = 'Server error. Please try again.';
+            errorDiv.style.display = 'block';
+        }
+    } catch (e) {
+        errorDiv.textContent = 'Cannot connect to server.';
+        errorDiv.style.display = 'block';
+    }
+}
+
 // ── Init ──────────────────────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => { loadMembers(); });
+document.addEventListener('DOMContentLoaded', () => {
+    const savedPassword = sessionStorage.getItem('adminPassword');
+    if (savedPassword) {
+        document.getElementById('admin-login-overlay').style.display = 'none';
+        loadMembers();
+    } else {
+        document.getElementById('admin-login-overlay').style.display = 'flex';
+        document.getElementById('adminPasswordInput').focus();
+    }
+});
 
 // ── Section Navigation ────────────────────────────────────────────────────────
 function showSection(name, el) {

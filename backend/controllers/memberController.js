@@ -1,5 +1,6 @@
 const db = require('../config/db');
 const { sendMemberNotificationEmail } = require('../services/emailService');
+const { syncToGoogleSheets } = require('../services/googleSheetsService');
 
 exports.registerMember = async (req, res) => {
     const { first_name, last_name, email, phone, introduction, why_join, source, preferred_role, queries } = req.body;
@@ -11,6 +12,9 @@ exports.registerMember = async (req, res) => {
         
         // Fire email
         await sendMemberNotificationEmail(first_name, last_name, email, phone, introduction, why_join, source, preferred_role, queries);
+        
+        // Sync to Google Sheets
+        await syncToGoogleSheets(req.body);
         
         res.status(201).json({ message: 'Member registered successfully', id: result.insertId });
     } catch (error) {

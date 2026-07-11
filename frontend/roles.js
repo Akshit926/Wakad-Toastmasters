@@ -63,7 +63,7 @@ async function handleLogin() {
     const btn   = document.getElementById('loginBtn');
     const err   = document.getElementById('loginError');
 
-    if (!cid) { showLoginError('Please enter your Customer ID.'); return; }
+    if (!cid) { showLoginError('Please enter your Member ID.'); return; }
 
     btn.disabled   = true;
     btn.innerHTML  = '<div class="btn-spinner"></div> Verifying…';
@@ -78,7 +78,7 @@ async function handleLogin() {
         const data = await res.json();
 
         if (!res.ok) {
-            showLoginError(data.error || 'Invalid Customer ID. Please check and try again.');
+            showLoginError(data.error || 'Invalid Member ID. Please check and try again.');
             return;
         }
 
@@ -97,6 +97,17 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter') handleLogin();
     });
     populateDateDropdown();
+
+    // Check if the member is already logged in via Member Portal
+    const storedMember = sessionStorage.getItem('tm_member');
+    if (storedMember) {
+        try {
+            loggedInMember = JSON.parse(storedMember);
+            showRoleBoard();
+        } catch (_) {
+            sessionStorage.removeItem('tm_member');
+        }
+    }
 });
 
 function showLoginError(msg) {
@@ -108,6 +119,7 @@ function showLoginError(msg) {
 function handleLogout() {
     loggedInMember = null;
     allRoleData    = [];
+    sessionStorage.removeItem('tm_member');
     document.getElementById('login-panel').style.display = '';
     document.getElementById('role-board').style.display  = 'none';
     document.getElementById('customerIdInput').value     = '';
