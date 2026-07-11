@@ -1163,8 +1163,11 @@ textarea.form-control { resize: vertical; min-height: 120px; }
   .contact-grid,
   .access-container { grid-template-columns: 1fr; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
+  .whatsapp-card { padding: 36px 28px; }
+  .map-card { height: 250px; }
 }
 @media (max-width: 768px) {
+  .nav-container { padding: 0 20px; }
   .team-grid { grid-template-columns: repeat(2, 1fr); }
   .mission-grid { gap: 32px; }
   .mission-cards { grid-template-columns: 1fr 1fr; }
@@ -1173,10 +1176,12 @@ textarea.form-control { resize: vertical; min-height: 120px; }
   .access-card { grid-template-columns: auto 1fr auto; }
 }
 @media (max-width: 480px) {
+  .nav-container { padding: 0 16px; }
   .team-grid { grid-template-columns: 1fr; }
   .mission-cards { grid-template-columns: 1fr; }
   .section { padding: 60px 0; }
   .section-heading { margin-bottom: 40px; }
   .access-card { grid-template-columns: 1fr; text-align: center; }
   .access-card-mark { margin: 0 auto; }
+  .whatsapp-card { padding: 32px 20px; }
 }
