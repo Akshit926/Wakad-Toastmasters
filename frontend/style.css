@@ -1156,6 +1156,123 @@ textarea.form-control { resize: vertical; min-height: 120px; }
   height: 100%;
 }
 
+/* ── Hall of Fame Section ─────────────────────────────────── */
+.hall-of-fame-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+.award-card {
+  position: relative;
+  border-radius: 24px;
+  padding: 32px 24px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: var(--transition);
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.award-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 6px;
+  background: linear-gradient(90deg, #d4af37, #f3e5ab);
+}
+.award-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.08);
+}
+.award-icon-wrapper {
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+}
+.award-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+}
+.badge-gold {
+  background: rgba(212, 175, 55, 0.12);
+  color: #b58900;
+  border: 1px solid rgba(212, 175, 55, 0.3);
+}
+.badge-silver {
+  background: rgba(192, 192, 192, 0.15);
+  color: #718096;
+  border: 1px solid rgba(192, 192, 192, 0.3);
+}
+.badge-bronze {
+  background: rgba(205, 127, 50, 0.12);
+  color: #a0522d;
+  border: 1px solid rgba(205, 127, 50, 0.3);
+}
+.award-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--tm-blue);
+  line-height: 1.4;
+  margin-bottom: 4px;
+  font-family: 'Poppins', sans-serif;
+}
+[data-theme="dark"] .award-title {
+  color: var(--text-primary);
+}
+.award-subtitle {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  margin-bottom: 24px;
+}
+.award-winner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  width: 100%;
+  justify-content: center;
+}
+.winner-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--bg-surface);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+.winner-avatar-initials {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #004165, #002d4a);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 2px solid var(--bg-surface);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+}
+.winner-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
 
 @media (max-width: 900px) {
   .split-grid,
