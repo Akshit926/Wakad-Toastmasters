@@ -130,7 +130,7 @@ const themeToggleBtn = document.getElementById('themeToggle');
 const html = document.documentElement;
 let currentTheme = localStorage.getItem('tm_theme');
 if (!currentTheme) {
-    currentTheme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    currentTheme = 'light';
 }
 html.setAttribute('data-theme', currentTheme);
 if (themeToggleBtn) {
