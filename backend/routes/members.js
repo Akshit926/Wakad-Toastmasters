@@ -5,7 +5,10 @@ const multer = require('multer');
 const router = express.Router();
 const memberController = require('../controllers/memberController');
 
-const uploadDir = path.join(__dirname, '..', 'uploads', 'member-photos');
+const os = require('os');
+const uploadDir = process.env.RENDER
+    ? path.join(os.tmpdir(), 'member-photos')
+    : path.join(__dirname, '..', 'uploads', 'member-photos');
 fs.mkdirSync(uploadDir, { recursive: true });
 
 const storage = multer.diskStorage({

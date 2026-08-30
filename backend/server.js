@@ -7,15 +7,17 @@ const path = require('path');
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
 const app = express();
+const os = require('os');
 
-const uploadsRoot = path.join(__dirname, 'uploads');
+const uploadsRoot = process.env.RENDER
+  ? os.tmpdir()
+  : path.join(__dirname, 'uploads');
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Uploaded member portraits are served back to the frontend and Google Sheets.
-// Use the app-local uploads folder instead of the OS temp folder so files survive server restarts.
 app.use('/uploads', express.static(uploadsRoot));
 
 // Routes
