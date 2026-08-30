@@ -10,6 +10,19 @@ function doPost(e) {
     // Parse the incoming JSON body
     var data = JSON.parse(e.postData.contents);
 
+    var photoUrl = data.photo_url || "";
+    if (data.photo_base64) {
+      var mimeType = data.photo_mime_type || "image/jpeg";
+      var photoBlob = Utilities.newBlob(
+        Utilities.base64Decode(data.photo_base64),
+        mimeType,
+        data.photo_filename || (data.full_name || "member") + ".jpg"
+      );
+      var photoFile = DriveApp.createFile(photoBlob);
+      photoFile.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+      photoUrl = photoFile.getUrl();
+    }
+
     // Define the headers to keep the sheet structured
     var headers = [
       "Timestamp",
@@ -60,7 +73,7 @@ function doPost(e) {
       data.birth_date || "",
       data.source || "",
       data.source_other || "",
-      data.photo_url || "",
+      photoUrl,
       data.photo_filename || "",
       data.introduction || "",
       data.hobbies || "",

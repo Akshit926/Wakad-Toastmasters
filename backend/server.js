@@ -29,8 +29,8 @@ app.use('/api/club-members', require('./routes/clubMembers'));
 // Serve static frontend files
 app.use(express.static(path.join(__dirname, '..', 'frontend'), { extensions: ['html', 'htm'] }));
 
-// Catch-all handler: send all non-API requests to index.html (for SPA routing)
-app.get('*', (req, res) => {
+// Catch-all handler: send all non-API, non-upload requests to index.html (for SPA routing)
+app.get(/^(?!\/api(?:\/|$)|\/uploads(?:\/|$)).*/, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'frontend', 'index.html'));
 });
 
