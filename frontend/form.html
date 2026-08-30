@@ -62,7 +62,7 @@
                     </div>
                 </div>
 
-                <form id="memberForm" class="form-card">
+                <form id="memberForm" class="form-card" autocomplete="on">
                     <div class="form-card-header">
                         <h2>Existing Member Details</h2>
                         <p>Please fill out your details below.</p>
@@ -91,7 +91,7 @@
 
                         <div class="form-group">
                             <label for="source">How did you hear about us?</label>
-                            <select id="source" required>
+                            <select id="source" required autocomplete="off">
                                 <option value="">Select one</option>
                                 <option value="Toastmasters">Toastmasters</option>
                                 <option value="Friends and Family">Friends and Family</option>
@@ -104,12 +104,12 @@
 
                         <div class="form-group form-group-full" id="sourceOtherGroup" style="display:none;">
                             <label for="sourceOther">If Others, please specify</label>
-                            <input type="text" id="sourceOther" placeholder="Tell us where you heard about us" maxlength="120">
+                            <input type="text" id="sourceOther" placeholder="Tell us where you heard about us" maxlength="120" autocomplete="off">
                         </div>
 
                         <div class="form-group form-group-full">
                             <label for="photo">Upload Your Photo</label>
-                            <input type="file" accept="image/*" id="photo" required>
+                            <input type="file" accept="image/*" id="photo" required autocomplete="off">
                             <small class="field-hint">Please upload a clear professional portrait photo (JPG, PNG, or WebP).</small>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                         <div class="textarea-wrapper">
                             <span class="counter">0/150</span>
                             <textarea id="intro" maxlength="150" placeholder="Tell us briefly about yourself"
-                                required></textarea>
+                                required autocomplete="off"></textarea>
                         </div>
                     </div>
 
@@ -128,7 +128,7 @@
                         <div class="textarea-wrapper">
                             <span class="counter">0/180</span>
                             <textarea id="hobbies" maxlength="180" placeholder="Share your hobbies and interests"
-                                required></textarea>
+                                required autocomplete="off"></textarea>
                         </div>
                     </div>
 
@@ -136,7 +136,7 @@
                         <label for="queries">Anything else you'd like to add</label>
                         <div class="textarea-wrapper">
                             <span class="counter">0/200</span>
-                            <textarea id="queries" maxlength="200" placeholder="Add anything else you want us to know"></textarea>
+                            <textarea id="queries" maxlength="200" placeholder="Add anything else you want us to know" autocomplete="off"></textarea>
                         </div>
                     </div>
 

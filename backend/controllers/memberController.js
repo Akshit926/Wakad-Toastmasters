@@ -100,9 +100,7 @@ exports.registerMember = async (req, res) => {
         }
     }
 
-    try {
-        // Fire email
-        await sendMemberNotificationEmail({
+    const notificationPayload = {
             full_name: normalizedName,
             first_name,
             last_name,
@@ -116,33 +114,21 @@ exports.registerMember = async (req, res) => {
             introduction: normalizedIntro,
             hobbies: normalizedHobbies,
             why_join: normalizedWhyJoin,
-            queries: normalizedQueries
+                queries: normalizedQueries
+            };
+
+    res.status(201).json({ message: 'Member registered successfully', id: insertId });
+
+    Promise.allSettled([
+        sendMemberNotificationEmail(notificationPayload),
+        syncToGoogleSheets(notificationPayload)
+    ]).then((results) => {
+        results.forEach((result) => {
+            if (result.status === 'rejected') {
+                console.error('Registration notification failed:', result.reason);
+            }
         });
-        
-        // Sync to Google Sheets
-        await syncToGoogleSheets({
-            full_name: normalizedName,
-            first_name,
-            last_name,
-            email: normalizedEmail,
-            phone: normalizedPhone,
-            birth_date,
-            source: normalizedSource,
-            source_other: normalizedSource === 'Others' ? normalizedSourceOther : '',
-            photo_url,
-            photo_filename: photo.filename,
-            introduction: normalizedIntro,
-            hobbies: normalizedHobbies,
-            why_join: normalizedWhyJoin,
-            queries: normalizedQueries
-        });
-        
-        res.status(201).json({ message: 'Member registered successfully', id: insertId });
-    } catch (error) {
-        await cleanupPhoto();
-        console.error(error);
-        res.status(500).json({ error: 'Failed to process registration' });
-    }
+    });
 };
 
 exports.getAllMembers = async (req, res) => {

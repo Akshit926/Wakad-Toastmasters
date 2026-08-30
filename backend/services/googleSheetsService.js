@@ -40,6 +40,8 @@ async function syncToGoogleSheets(memberDetails) {
     try {
         console.log('[Google Sheets] Syncing new member registration details with photo attachment...');
         
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 15000);
         const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: {
@@ -51,7 +53,9 @@ async function syncToGoogleSheets(memberDetails) {
                 photo_base64: photoBase64,
                 photo_mime_type: photoMimeType
             }),
+            signal: controller.signal
         });
+        clearTimeout(timeout);
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
