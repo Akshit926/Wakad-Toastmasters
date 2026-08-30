@@ -13,7 +13,12 @@ app.use(cors());
 app.use(express.json());
 
 // Uploaded member portraits are served back to the frontend and Google Sheets.
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+if (process.env.RENDER) {
+  const os = require('os');
+  app.use('/uploads', express.static(os.tmpdir()));
+} else {
+  app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+}
 
 // Routes
 app.use('/api/members', require('./routes/members'));
