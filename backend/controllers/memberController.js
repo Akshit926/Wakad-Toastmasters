@@ -66,8 +66,6 @@ exports.registerMember = async (req, res) => {
     const baseUrl = (process.env.BASE_URL || 'http://localhost:5001').replace(/\/$/, '');
     const photo_url = `${baseUrl}/uploads/member-photos/${photo.filename}`;
 
-    try {
-        const [result] = await db.execute(
     let insertId = null;
     try {
         const [result] = await db.execute(
