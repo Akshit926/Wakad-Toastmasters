@@ -1,3 +1,17 @@
+function getApiBase() {
+    const configured = window.__TM_API_BASE_URL__?.trim();
+    if (configured) return configured.replace(/\/$/, '');
+
+    const metaBase = document.querySelector('meta[name="tm-api-base"]')?.content?.trim();
+    if (metaBase) return metaBase.replace(/\/$/, '');
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:5001';
+    }
+
+    return window.location.origin;
+}
+
 const navbar = document.querySelector('.navbar');
 const navLinks = document.querySelectorAll('.nav-links a');
 const sections = document.querySelectorAll('section[id], header[id]');
@@ -103,11 +117,7 @@ if (contactBtn) {
         };
 
         try {
-        const _apiBase = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-            ? 'http://localhost:5001'
-            : 'https://wakadtoastmasterclub-263491062829.asia-south1.run.app';
-
-            const response = await fetch(`${_apiBase}/api/contacts`, {
+            const response = await fetch(`${getApiBase()}/api/contacts`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)

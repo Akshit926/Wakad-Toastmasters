@@ -1,7 +1,19 @@
 // ── API Base URL — auto-switches between local dev and Cloud Run ──────────────
-const BASE_URL  = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5001'
-    : 'https://wakadtoastmasterclub-263491062829.asia-south1.run.app';
+function getApiBase() {
+    const configured = window.__TM_API_BASE_URL__?.trim();
+    if (configured) return configured.replace(/\/$/, '');
+
+    const metaBase = document.querySelector('meta[name="tm-api-base"]')?.content?.trim();
+    if (metaBase) return metaBase.replace(/\/$/, '');
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:5001';
+    }
+
+    return window.location.origin;
+}
+
+const BASE_URL  = getApiBase();
 const API       = `${BASE_URL}/api/club-members`;
 const ROLES_API = `${BASE_URL}/api/roles`;
 

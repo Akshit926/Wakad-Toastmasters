@@ -12,6 +12,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Uploaded member portraits are served back to the frontend and Google Sheets.
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
 // Routes
 app.use('/api/members', require('./routes/members'));
 app.use('/api/contacts', require('./routes/contacts'));
@@ -19,7 +22,7 @@ app.use('/api/roles', require('./routes/roles'));
 app.use('/api/club-members', require('./routes/clubMembers'));
 
 // Serve static frontend files
-app.use(express.static(path.join(__dirname, '..', 'frontend')));
+app.use(express.static(path.join(__dirname, '..', 'frontend'), { extensions: ['html', 'htm'] }));
 
 // Catch-all handler: send all non-API requests to index.html (for SPA routing)
 app.get('*', (req, res) => {

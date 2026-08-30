@@ -4,14 +4,20 @@ USE toastmasters_db;
 -- 1. Members Table
 CREATE TABLE IF NOT EXISTS members (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    full_name VARCHAR(150) NOT NULL,
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
     email VARCHAR(255) NOT NULL UNIQUE,
-    phone VARCHAR(20),
+    phone VARCHAR(20) NOT NULL,
+    birth_date DATE NOT NULL,
+    source VARCHAR(255) NOT NULL,
+    source_other VARCHAR(255),
+    photo_url VARCHAR(500) NOT NULL,
+    photo_filename VARCHAR(255) NOT NULL,
     introduction TEXT,
     why_join TEXT,
-    source VARCHAR(255),
     preferred_role VARCHAR(100),
+    hobbies TEXT NOT NULL,
     queries TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

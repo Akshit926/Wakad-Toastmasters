@@ -49,14 +49,20 @@ async function migrate() {
         await db.execute(`
             CREATE TABLE IF NOT EXISTS members (
                 id             INT AUTO_INCREMENT PRIMARY KEY,
+                full_name      VARCHAR(150) NOT NULL,
                 first_name     VARCHAR(100) NOT NULL,
                 last_name      VARCHAR(100) NOT NULL,
                 email          VARCHAR(255) NOT NULL UNIQUE,
-                phone          VARCHAR(20),
+                phone          VARCHAR(20) NOT NULL,
+                birth_date     DATE NOT NULL,
+                source         VARCHAR(255) NOT NULL,
+                source_other   VARCHAR(255),
+                photo_url      VARCHAR(500) NOT NULL,
+                photo_filename VARCHAR(255) NOT NULL,
                 introduction   TEXT,
                 why_join       TEXT,
-                source         VARCHAR(255),
                 preferred_role VARCHAR(100),
+                hobbies        TEXT NOT NULL,
                 queries        TEXT,
                 created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
@@ -137,6 +143,35 @@ async function migrate() {
         } catch (e) {
             if (e.code !== 'ER_DUP_FIELDNAME') throw e;
             // Column already exists — no action needed
+        }
+
+        const memberColumnStatements = [
+            `ALTER TABLE members ADD COLUMN full_name VARCHAR(150) NULL AFTER id`,
+            `ALTER TABLE members ADD COLUMN birth_date DATE NULL AFTER phone`,
+            `ALTER TABLE members ADD COLUMN source_other VARCHAR(255) NULL AFTER source`,
+            `ALTER TABLE members ADD COLUMN photo_url VARCHAR(500) NULL AFTER source_other`,
+            `ALTER TABLE members ADD COLUMN photo_filename VARCHAR(255) NULL AFTER photo_url`,
+            `ALTER TABLE members ADD COLUMN hobbies TEXT NULL AFTER why_join`
+        ];
+
+        for (const sql of memberColumnStatements) {
+            try {
+                await db.execute(sql);
+            } catch (e) {
+                if (!['ER_DUP_FIELDNAME', 'ER_BAD_FIELD_ERROR', 'ER_DUP_KEYNAME'].includes(e.code)) {
+                    throw e;
+                }
+            }
+        }
+
+        try {
+            await db.execute(`
+                UPDATE members
+                SET full_name = CONCAT(first_name, ' ', last_name)
+                WHERE full_name IS NULL OR full_name = ''
+            `);
+        } catch (e) {
+            console.warn('Could not backfill member full_name:', e.message);
         }
 
         const [[{ total }]] = await db.execute('SELECT COUNT(*) AS total FROM club_members');

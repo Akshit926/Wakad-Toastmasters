@@ -100,6 +100,10 @@
     gap: 18px;
 }
 
+.form-group-full {
+    grid-column: 1 / -1;
+}
+
 .form-group {
     margin-bottom: 18px;
 }
@@ -143,6 +147,14 @@
     align-items: center;
     padding: 11px 14px;
     background: var(--bg-surface);
+}
+
+.field-hint {
+    display: block;
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    line-height: 1.5;
 }
 
 .form-group input:focus,
@@ -196,6 +208,10 @@
 [data-theme="dark"] .form-card,
 [data-theme="dark"] .counter {
     background: var(--bg-surface);
+}
+
+[data-theme="dark"] .field-hint {
+    color: rgba(255,255,255,0.7);
 }
 
 @media (max-width: 900px) {

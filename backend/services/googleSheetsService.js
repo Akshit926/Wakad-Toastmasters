@@ -7,7 +7,7 @@
  */
 async function syncToGoogleSheets(memberDetails) {
     const webhookUrl = process.env.GOOGLE_SHEETS_WEBHOOK_URL;
-    
+
     if (!webhookUrl) {
         console.log('[Google Sheets] Webhook URL not configured in .env. Skipping sync.');
         return;
@@ -15,7 +15,7 @@ async function syncToGoogleSheets(memberDetails) {
 
     try {
         console.log('[Google Sheets] Syncing new member registration details...');
-        
+
         const response = await fetch(webhookUrl, {
             method: 'POST',
             headers: {

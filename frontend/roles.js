@@ -1,9 +1,21 @@
 /* roles.js — complete rewrite with login flow + backend-driven role board */
 
 // ── API Base URL — auto-switches between local dev and Cloud Run ──────────────
-const API_BASE = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:5001/api'
-    : 'https://wakadtoastmasterclub-263491062829.asia-south1.run.app/api';
+function getApiBase() {
+    const configured = window.__TM_API_BASE_URL__?.trim();
+    if (configured) return configured.replace(/\/$/, '');
+
+    const metaBase = document.querySelector('meta[name="tm-api-base"]')?.content?.trim();
+    if (metaBase) return metaBase.replace(/\/$/, '');
+
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:5001';
+    }
+
+    return window.location.origin;
+}
+
+const API_BASE = `${getApiBase()}/api`;
 
 const ROLE_ICONS = {
     'Toastmaster of the Day': 'TM',
