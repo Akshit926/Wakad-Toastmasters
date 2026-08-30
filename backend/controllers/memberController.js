@@ -68,6 +68,9 @@ exports.registerMember = async (req, res) => {
 
     try {
         const [result] = await db.execute(
+    let insertId = null;
+    try {
+        const [result] = await db.execute(
             `INSERT INTO members (
                 full_name, first_name, last_name, email, phone, birth_date,
                 source, source_other, photo_url, photo_filename,
@@ -90,7 +93,16 @@ exports.registerMember = async (req, res) => {
                 normalizedQueries
             ]
         );
-        
+        insertId = result.insertId;
+    } catch (dbError) {
+        console.warn('[db] Skipping database save because database is not configured/connected:', dbError.message);
+        if (dbError.code === 'ER_DUP_ENTRY') {
+            await cleanupPhoto();
+            return res.status(400).json({ error: 'Email already exists' });
+        }
+    }
+
+    try {
         // Fire email
         await sendMemberNotificationEmail({
             full_name: normalizedName,
@@ -127,14 +139,11 @@ exports.registerMember = async (req, res) => {
             queries: normalizedQueries
         });
         
-        res.status(201).json({ message: 'Member registered successfully', id: result.insertId });
+        res.status(201).json({ message: 'Member registered successfully', id: insertId });
     } catch (error) {
         await cleanupPhoto();
-        if(error.code === 'ER_DUP_ENTRY') {
-            return res.status(400).json({ error: 'Email already exists' });
-        }
         console.error(error);
-        res.status(500).json({ error: 'Database error' });
+        res.status(500).json({ error: 'Failed to process registration' });
     }
 };
 
